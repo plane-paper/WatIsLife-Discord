@@ -3,9 +3,11 @@
 ## About
 A much easier render on Discord of the ongoing project [WatIsLife](https://github.com/plane-paper/WatIsLife). Requires some rights.
 
-Counts how many time you've said you want KYS.
+Counts how many time you've said you want to KYS.
 
-## Commands
+## Commands and Usage
+
+The only phrase that triggers a counter increment right now is "kill myself", in that exact fashion. I might add more keywords very soon.
 
 The bot has three commands:
 1. !depressionlevel - returns the count of the current user
