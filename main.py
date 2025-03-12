@@ -36,7 +36,7 @@ async def on_message(message):
 
         # Respond with the personalized count
         await message.channel.send(
-            f"Hey {message.author.name}, I've heard '{target_phrase}' from you {user_counters[user_id]} times!"
+            f"As characterized by saying {target_phrase} again, {message.author.name}'s depression level increased to {user_counters[user_id]}. 📈"
         )
 
     # Ensure other commands still work
@@ -50,9 +50,9 @@ async def resetcount(ctx):
 
     if user_id in user_counters:
         user_counters[user_id] = 0
-        await ctx.send(f"Your personal phrase count has been reset, {ctx.author.name}!")
+        await ctx.send(f"{ctx.author.name} has been cured of depression! 🎉\nNo credits to SSRIs.")
     else:
-        await ctx.send("You don't have a count yet!")
+        await ctx.send(f"Brother, you're not depressed, you can't be cured. 🤷‍♂️")
 
 # Command to check the current count without triggering it
 @bot.command(name="depressionlevel")
@@ -60,13 +60,13 @@ async def mycount(ctx):
     """Lets users check their count without saying the phrase."""
     user_id = ctx.author.id
     count = user_counters.get(user_id, 0)
-    await ctx.send(f"Hey {ctx.author.name}, you've said '{target_phrase}' {count} times!")
+    await ctx.send(f"{ctx.author.name}'s depression level is '{count}'. 📊")
 
 @bot.command(name="watchlist")
 async def allcounts(ctx):
     """Displays all users' counts in the current chat, ranked from most to least."""
     if not user_counters:
-        await ctx.send("Nobody is depressed.")
+        await ctx.send("Nobody is depressed. 🎉")
         return
 
     # Sort users by count (highest to lowest)
