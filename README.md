@@ -1,3 +1,18 @@
 # WatIsLife-Discord
 
+## About
 A much easier render on Discord of the ongoing project [WatIsLife](https://github.com/plane-paper/WatIsLife). Requires some rights.
+
+Counts how many time you've said you want KYS.
+
+## Commands
+
+The bot has three commands:
+1. !depressionlevel - returns the count of the current user
+2. !curedepression - resets the count of the current user
+3. !watchlist - returns all users that have a count > 0, from highest count to lowest.
+
+## Deployment
+Use [this link](https://discord.com/oauth2/authorize?client_id=1349295351538126858&permissions=8&integration_type=0&scope=bot) to invite the bot to your server. It will ask for administrator rights, which is an overkill... but I'm too lazy to configure it right now. I *might* change it later. Who knows.
+
+If the link expires or has other problems, please let me know by opening an issue on GitHub.
