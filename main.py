@@ -16,11 +16,10 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 # Configuration
 target_phrase = "kill myself"
 counter_file = "user_counters.json"
-user_counters = {}  # Dictionary to track counts per user
 
 # Setup logging
 logging.basicConfig(
-    filename=f"bot_error_log_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log",
+    filename=f"LOGS/bot_error_log_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log",
     level=logging.ERROR,
     format="%(asctime)s | %(levelname)s | %(message)s"
 )
@@ -31,7 +30,9 @@ def load_counters():
     try:
         with open(counter_file, "r") as file:
             user_counters = json.load(file)
+            user_counters = {str(user_id): count for user_id, count in user_counters.items()}
         print("User counters loaded successfully.")
+        print(user_counters)
     except FileNotFoundError:
         print("No previous counter file found, starting fresh.")
         user_counters = {}
@@ -43,7 +44,7 @@ def load_counters():
 def save_counters():
     try:
         with open(counter_file, "w") as file:
-            json.dump(user_counters, file, indent=4)
+            json.dump({str(user_id): count for user_id, count in user_counters.items()}, file, indent=4)
         print("User counters saved.")
     except Exception as e:
         print(f"Failed to save counters: {e}")
@@ -71,13 +72,20 @@ async def on_message(message):
             return
 
         # User-specific counting
-        user_id = message.author.id
+        user_id = str(message.author.id)
+
+        await bot.process_commands(message)
+
+        print(f"Pre-check counters: {user_counters}")
 
         # If the message contains the target phrase
         if target_phrase in message.content.lower():
-            if user_id not in user_counters:
-                user_counters[user_id] = 0
-            user_counters[user_id] += 1
+            previous_count = user_counters.get(user_id, 0)
+            new_count = previous_count + 1
+            user_counters[user_id] = new_count
+
+            print(f"Count updated: {previous_count} -> {new_count}")
+
             save_counters()
 
             # Respond with the personalized count
@@ -86,7 +94,7 @@ async def on_message(message):
             )
 
         # Ensure other commands still work
-        await bot.process_commands(message)
+        # await bot.process_commands(message)
     except Exception as e:
         error_message = f"Error processing message from {message.author}: {e}\n{traceback.format_exc()}"
         print(error_message)
