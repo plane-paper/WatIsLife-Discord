@@ -76,11 +76,11 @@ async def allcounts(ctx):
     counts_list = []
     for rank, (user_id, count) in enumerate(sorted_counts, start=1):
         user = await bot.fetch_user(user_id)
-        counts_list.append(f"**#{rank} {user.name}**: {count} times")
+        counts_list.append(f"**#{rank} {user.name}**: level {count}")
 
     # Send the list as a nicely formatted message
     counts_message = "\n".join(counts_list)
-    await ctx.send(f"🏅 **Suicide Watchlist:**\n{counts_message}")
+    await ctx.send(f"🏅 **Suicide Likelihood Level:**\n{counts_message}")
 
 # Run the bot
 token = env.token()
