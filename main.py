@@ -36,7 +36,7 @@ async def on_message(message):
 
         # Respond with the personalized count
         await message.channel.send(
-            f"As characterized by saying {target_phrase} again, {message.author.name}'s depression level increased to {user_counters[user_id]}. 📈"
+            f"As characterized by saying '{target_phrase}' again, {message.author.name}'s depression level increased to {user_counters[user_id]}. 📈"
         )
 
     # Ensure other commands still work
