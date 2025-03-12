@@ -51,4 +51,4 @@ async def resetcount(ctx):
 
 # Run the bot
 token = env.token()
-bot.run("token")
+bot.run(token)
