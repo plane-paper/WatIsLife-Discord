@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import json
 import env
 import logging
 import traceback
@@ -14,6 +15,7 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 
 # Configuration
 target_phrase = "kill myself"
+counter_file = "user_counters.json"
 user_counters = {}  # Dictionary to track counts per user
 
 # Setup logging
@@ -23,9 +25,34 @@ logging.basicConfig(
     format="%(asctime)s | %(levelname)s | %(message)s"
 )
 
+# Load counter
+def load_counters():
+    global user_counters
+    try:
+        with open(counter_file, "r") as file:
+            user_counters = json.load(file)
+        print("User counters loaded successfully.")
+    except FileNotFoundError:
+        print("No previous counter file found, starting fresh.")
+        user_counters = {}
+    except Exception as e:
+        print(f"Failed to load counters: {e}")
+        logging.error(f"Failed to load counters: {e}\n{traceback.format_exc()}")
+
+# Save counter
+def save_counters():
+    try:
+        with open(counter_file, "w") as file:
+            json.dump(user_counters, file, indent=4)
+        print("User counters saved.")
+    except Exception as e:
+        print(f"Failed to save counters: {e}")
+        logging.error(f"Failed to save counters: {e}\n{traceback.format_exc()}")
+
 # Event: Bot is ready
 @bot.event
 async def on_ready():
+    load_counters()
     print(f"Bot is online as {bot.user}")
 
 # Event: Catch ALL unhandled errors globally
@@ -51,6 +78,7 @@ async def on_message(message):
             if user_id not in user_counters:
                 user_counters[user_id] = 0
             user_counters[user_id] += 1
+            save_counters()
 
             # Respond with the personalized count
             await message.channel.send(
@@ -74,6 +102,7 @@ async def resetcount(ctx):
         if user_id in user_counters:
             user_counters[user_id] = 0 # Just in case.
             del user_counters[user_id]
+            save_counters()
             await ctx.send(f"{ctx.author.name} has been cured of depression! 🎉\nNo credits to SSRIs.")
         else:
             await ctx.send(f"Brother, you're not depressed, you can't be cured. 🤷‍♂️")
