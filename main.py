@@ -43,7 +43,7 @@ async def on_message(message):
     await bot.process_commands(message)
 
 # Command to reset an individual user's counter
-@bot.command()
+@bot.command(name="curedepression")
 async def resetcount(ctx):
     """Allows a user to reset their own counter."""
     user_id = ctx.author.id
@@ -55,7 +55,7 @@ async def resetcount(ctx):
         await ctx.send("You don't have a count yet!")
 
 # Command to check the current count without triggering it
-@bot.command()
+@bot.command(name="depressionlevel")
 async def mycount(ctx):
     """Lets users check their count without saying the phrase."""
     user_id = ctx.author.id
