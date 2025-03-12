@@ -45,9 +45,22 @@ async def on_message(message):
 # Command to reset an individual user's counter
 @bot.command()
 async def resetcount(ctx):
+    """Allows a user to reset their own counter."""
     user_id = ctx.author.id
-    user_counters[user_id] = 0
-    await ctx.send(f"Your personal phrase count has been reset!")
+
+    if user_id in user_counters:
+        user_counters[user_id] = 0
+        await ctx.send(f"Your personal phrase count has been reset, {ctx.author.name}!")
+    else:
+        await ctx.send("You don't have a count yet!")
+
+# Command to check the current count without triggering it
+@bot.command()
+async def mycount(ctx):
+    """Lets users check their count without saying the phrase."""
+    user_id = ctx.author.id
+    count = user_counters.get(user_id, 0)
+    await ctx.send(f"Hey {ctx.author.name}, you've said '{target_phrase}' {count} times!")
 
 # Run the bot
 token = env.token()
