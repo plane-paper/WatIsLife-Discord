@@ -62,6 +62,26 @@ async def mycount(ctx):
     count = user_counters.get(user_id, 0)
     await ctx.send(f"Hey {ctx.author.name}, you've said '{target_phrase}' {count} times!")
 
+@bot.command(name="watchlist")
+async def allcounts(ctx):
+    """Displays all users' counts in the current chat, ranked from most to least."""
+    if not user_counters:
+        await ctx.send("Nobody is depressed.")
+        return
+
+    # Sort users by count (highest to lowest)
+    sorted_counts = sorted(user_counters.items(), key=lambda x: x[1], reverse=True)
+
+    # Build the leaderboard
+    counts_list = []
+    for rank, (user_id, count) in enumerate(sorted_counts, start=1):
+        user = await bot.fetch_user(user_id)
+        counts_list.append(f"**#{rank} {user.name}**: {count} times")
+
+    # Send the list as a nicely formatted message
+    counts_message = "\n".join(counts_list)
+    await ctx.send(f"🏅 **Suicide Watchlist:**\n{counts_message}")
+
 # Run the bot
 token = env.token()
 bot.run(token)
