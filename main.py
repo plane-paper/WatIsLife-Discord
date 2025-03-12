@@ -49,7 +49,8 @@ async def resetcount(ctx):
     user_id = ctx.author.id
 
     if user_id in user_counters:
-        user_counters[user_id] = 0
+        user_counters[user_id] = 0 # Just in case.
+        del user_counters[user_id]
         await ctx.send(f"{ctx.author.name} has been cured of depression! 🎉\nNo credits to SSRIs.")
     else:
         await ctx.send(f"Brother, you're not depressed, you can't be cured. 🤷‍♂️")
@@ -60,17 +61,22 @@ async def mycount(ctx):
     """Lets users check their count without saying the phrase."""
     user_id = ctx.author.id
     count = user_counters.get(user_id, 0)
-    await ctx.send(f"{ctx.author.name}'s depression level is '{count}'. 📊")
+    if count > 0:
+        await ctx.send(f"{ctx.author.name}'s depression level is '{count}'. 📊")
+    else:
+        await ctx.send(f"{ctx.author.name} is not depressed. 🎉")
 
 @bot.command(name="watchlist")
 async def allcounts(ctx):
     """Displays all users' counts in the current chat, ranked from most to least."""
-    if not user_counters:
+    active_counts = {uid: count for uid, count in user_counters.items() if count > 0}
+
+    if not active_counts:
         await ctx.send("Nobody is depressed. 🎉")
         return
 
     # Sort users by count (highest to lowest)
-    sorted_counts = sorted(user_counters.items(), key=lambda x: x[1], reverse=True)
+    sorted_counts = sorted(active_counts.items(), key=lambda x: x[1], reverse=True)
 
     # Build the leaderboard
     counts_list = []
