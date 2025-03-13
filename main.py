@@ -5,6 +5,7 @@ import env
 import logging
 import traceback
 from datetime import datetime
+import sys
 
 # Setup bot with necessary intents
 intents = discord.Intents.default()
@@ -19,9 +20,12 @@ counter_file = "user_counters.json"
 
 # Setup logging
 logging.basicConfig(
-    filename=f"LOGS/bot_error_log_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log",
-    level=logging.ERROR,
-    format="%(asctime)s | %(levelname)s | %(message)s"
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(message)s",
+    handlers=[
+        logging.FileHandler(f"LOGS/bot_log_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log"),
+        logging.StreamHandler(sys.stdout)
+    ]
 )
 
 # Load counter
@@ -31,16 +35,14 @@ def load_counters():
         with open(counter_file, "r") as file:
             user_counters = json.load(file)
             user_counters = {str(user_id): count for user_id, count in user_counters.items()}
-        print("User counters loaded successfully.")
-        print(user_counters)
+        logging.info("User counters loaded successfully.")
     except FileNotFoundError:
-        print("No previous counter file found, starting fresh.")
+        logging.warning("No previous counter file found, starting fresh.")
         user_counters = {}
     except json.JSONDecodeError:
-        print("Empty or corrupted counter file detected — resetting counters.")
+        logging.warning("Empty or corrupted counter file detected — resetting counters.")
         user_counters = {}
     except Exception as e:
-        print(f"Failed to load counters: {e}")
         logging.error(f"Failed to load counters: {e}\n{traceback.format_exc()}")
 
 # Save counter
@@ -48,22 +50,20 @@ def save_counters():
     try:
         with open(counter_file, "w") as file:
             json.dump({str(user_id): count for user_id, count in user_counters.items()}, file, indent=4)
-        print("User counters saved.")
+        logging.info("User counters saved.")
     except Exception as e:
-        print(f"Failed to save counters: {e}")
         logging.error(f"Failed to save counters: {e}\n{traceback.format_exc()}")
 
 # Event: Bot is ready
 @bot.event
 async def on_ready():
     load_counters()
-    print(f"Bot is online as {bot.user}")
+    logging.info(f"Bot is online as {bot.user}")
 
 # Event: Catch ALL unhandled errors globally
 @bot.event
 async def on_error(event, *args, **kwargs):
     error_message = f"Unhandled exception in event: {event}\n{traceback.format_exc()}"
-    print(error_message)  # Print error to console
     logging.error(error_message)  # Log error to file
 
 # Event: Listening to all messages
@@ -79,7 +79,7 @@ async def on_message(message):
 
         await bot.process_commands(message)
 
-        print(f"Pre-check counters: {user_counters}")
+        logging.info(f"Pre-check counters: {user_counters}")
 
         # If the message contains the target phrase
         if target_phrase in message.content.lower():
@@ -87,7 +87,7 @@ async def on_message(message):
             new_count = previous_count + 1
             user_counters[user_id] = new_count
 
-            print(f"Count updated: {previous_count} -> {new_count}")
+            logging.info(f"Count updated: {previous_count} -> {new_count}")
 
             save_counters()
 
@@ -100,7 +100,6 @@ async def on_message(message):
         # await bot.process_commands(message)
     except Exception as e:
         error_message = f"Error processing message from {message.author}: {e}\n{traceback.format_exc()}"
-        print(error_message)
         logging.error(error_message)
         await message.channel.send("Oops, something went wrong! 😓")
 
@@ -119,7 +118,6 @@ async def resetcount(ctx):
             await ctx.send(f"Brother, you're not depressed, you can't be cured. 🤷‍♂️")
     except Exception as e:
         error_message = f"Error in resetcount command: {e}\n{traceback.format_exc()}"
-        print(error_message)
         logging.error(error_message)
         await ctx.send("Oops, something went wrong while resetting your count! 😓")
 
@@ -135,7 +133,6 @@ async def mycount(ctx):
             await ctx.send(f"{ctx.author.name} is not depressed. 🎉")
     except Exception as e:
         error_message = f"Error in mycount command: {e}\n{traceback.format_exc()}"
-        print(error_message)
         logging.error(error_message)
         await ctx.send("Oops, something went wrong while checking your count! 😓")
 
@@ -162,14 +159,12 @@ async def allcounts(ctx):
         await ctx.send(f"🏅 **Suicide Likelihood Level:**\n{counts_message}")
     except Exception as e:
         error_message = f"Error in allcounts command: {e}\n{traceback.format_exc()}"
-        print(error_message)
         logging.error(error_message)
         await ctx.send("Oops, something went wrong while fetching the leaderboard!")
 
 @bot.event
 async def on_command_error(ctx, error):
     error_message = f"Command error: {error}\n{traceback.format_exc()}"
-    print(error_message)
     logging.error(error_message)
     await ctx.send("Oops, something went wrong with the command! 🤖")
 
