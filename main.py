@@ -15,7 +15,7 @@ intents.dm_messages = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 # Configuration
-target_phrase = "kill myself"
+target_phrases = ["kill myself", "kms", "jump off e7"]
 counter_file = "user_counter.json"
 
 # Setup logging
@@ -82,19 +82,20 @@ async def on_message(message):
         logging.info(f"Pre-check counters: {user_counters}")
 
         # If the message contains the target phrase
-        if target_phrase in message.content.lower():
-            previous_count = user_counters.get(user_id, 0)
-            new_count = previous_count + 1
-            user_counters[user_id] = new_count
+        for target_phrase in target_phrases:
+            if target_phrase in message.content.lower():
+                previous_count = user_counters.get(user_id, 0)
+                new_count = previous_count + 1
+                user_counters[user_id] = new_count
 
-            logging.info(f"Count updated: {previous_count} -> {new_count}")
+                logging.info(f"Count updated: {previous_count} -> {new_count}")
 
-            save_counters()
+                save_counters()
 
-            # Respond with the personalized count
-            await message.channel.send(
-                f"As characterized by saying '{target_phrase}' again, {message.author.name}'s depression level increased to {user_counters[user_id]}. 📈"
-            )
+                # Respond with the personalized count
+                await message.channel.send(
+                    f"As characterized by saying '{target_phrase}' again, {message.author.name}'s depression level increased to {user_counters[user_id]}. 📈"
+                )
 
         # Ensure other commands still work
         # await bot.process_commands(message)
