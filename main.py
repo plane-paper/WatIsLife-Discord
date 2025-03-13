@@ -36,6 +36,9 @@ def load_counters():
     except FileNotFoundError:
         print("No previous counter file found, starting fresh.")
         user_counters = {}
+    except json.JSONDecodeError:
+        print("Empty or corrupted counter file detected — resetting counters.")
+        user_counters = {}
     except Exception as e:
         print(f"Failed to load counters: {e}")
         logging.error(f"Failed to load counters: {e}\n{traceback.format_exc()}")
