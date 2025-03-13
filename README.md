@@ -36,6 +36,11 @@ If you want to deploy your own bot, do this:
 6. Launch main.py on your local computer. Note your computer **must be connected to the internet**.
 7. Done! Notice, for the bot to be online and responding, main.py must be running on some internet-connected computer. Alternatively, run the prorgram on a microcomputer like a [RaspPi](https://www.raspberrypi.com/documentation/computers/os.html).
 
+Some other things worth noting:
+- Logs are saved under LOGS/bot_log_[timestamp].log, generated automatically.
+- User counters are saved in user_counter,json in the root directory, generated automatically.
+
+
 ## Cloning and Additional Development
 I really struggle to believe that this thing can be used in other projects, but if you wish, clone away.
 
