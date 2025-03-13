@@ -16,7 +16,7 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 
 # Configuration
 target_phrase = "kill myself"
-counter_file = "user_counters.json"
+counter_file = "user_counter.json"
 
 # Setup logging
 logging.basicConfig(
@@ -107,7 +107,7 @@ async def on_message(message):
 @bot.command(name="curedepression")
 async def resetcount(ctx):
     try:
-        user_id = ctx.author.id
+        user_id = str(ctx.author.id)
 
         if user_id in user_counters:
             user_counters[user_id] = 0 # Just in case.
@@ -126,7 +126,7 @@ async def resetcount(ctx):
 async def mycount(ctx):
     try:
         user_id = ctx.author.id
-        count = user_counters.get(user_id, 0)
+        count = user_counters.get(f"{user_id}", 0)
         if count > 0:
             await ctx.send(f"{ctx.author.name}'s depression level is '{count}'. 📊")
         else:
