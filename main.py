@@ -113,6 +113,7 @@ async def resetcount(ctx):
         if user_id in user_counters:
             user_counters[user_id] = 0 # Just in case.
             del user_counters[user_id]
+            logging.info("Counter resetted")
             save_counters()
             await ctx.send(f"{ctx.author.name} has been cured of depression! 🎉\nNo credits to SSRIs.")
         else:
@@ -128,6 +129,7 @@ async def mycount(ctx):
     try:
         user_id = str(ctx.author.id)
         count = user_counters.get(user_id, 0)
+        logging.info("User requested own level.")
         if count > 0:
             await ctx.send(f"{ctx.author.name}'s depression level is '{count}'. 📊")
         else:
@@ -158,6 +160,7 @@ async def allcounts(ctx):
         # Send the list as a nicely formatted message
         counts_message = "\n".join(counts_list)
         await ctx.send(f"🏅 **Suicide Likelihood Level:**\n{counts_message}")
+        logging.info("User requested watchlist.")
     except Exception as e:
         error_message = f"Error in allcounts command: {e}\n{traceback.format_exc()}"
         logging.error(error_message)
