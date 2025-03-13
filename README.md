@@ -27,7 +27,7 @@ If you want to deploy your own bot, do this:
 2. Install Python and then run `pip install discord` in your terminal (if this fails, use `python -m pip install discord` or `py -m pip install discord`)
 3. Go to Discord developer portal, select start new app, go to "bot", configure it, and click reset token. Copy the token and **save it somewhere temporarily, as Discord won't give it to you again**. You can come back and configure any other further details anytime.
 4. Create a env.py file in the same directory as main.py. Paste this in:
-    ```
+    ```python
     def token():
         return "Your_Token"
     ```
