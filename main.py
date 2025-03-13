@@ -126,8 +126,8 @@ async def resetcount(ctx):
 @bot.command(name="depressionlevel")
 async def mycount(ctx):
     try:
-        user_id = ctx.author.id
-        count = user_counters.get(f"{user_id}", 0)
+        user_id = str(ctx.author.id)
+        count = user_counters.get(user_id, 0)
         if count > 0:
             await ctx.send(f"{ctx.author.name}'s depression level is '{count}'. 📊")
         else:
