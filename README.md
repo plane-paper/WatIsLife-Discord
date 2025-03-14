@@ -38,7 +38,7 @@ If you want to deploy your own bot, do this:
 
 Some other things worth noting:
 - Logs are saved under LOGS/bot_log_[timestamp].log, generated automatically.
-- User counters are saved in user_counter,json in the root directory, generated automatically.
+- User counters are saved in user_counter.json in the root directory, generated automatically.
 
 
 ## Cloning and Additional Development
