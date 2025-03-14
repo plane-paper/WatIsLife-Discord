@@ -7,7 +7,7 @@ Counts how many time you've said you want to KYS.
 
 ## Commands and Usage
 
-The only phrase that triggers a counter increment right now is "kill myself", in that exact fashion. I might add more keywords very soon.
+The only phrases that trigger a counter increment right now is "kill myself", "kms", and "jump off e7", without regard for capitalization. ~~I might add more keywords very soon.~~ If there's other keywords I should add, don't hesitate to open an issue.
 
 The bot has three commands:
 1. !depressionlevel - returns the count of the current user
